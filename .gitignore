@@ -1,0 +1,12 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Données brutes volumineuses (régénérables via scripts/download_data.py)
+data/raw/*.csv
+
+# OS
+Thumbs.db
+.DS_Store

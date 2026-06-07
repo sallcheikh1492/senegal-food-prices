@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prix des céréales & inflation au Sénégal (2007–2026) — Données réelles WFP</title>
+<meta name="description" content="Analyse des prix réels des céréales au Sénégal (WFP + Banque mondiale) : inflation alimentaire, chocs 2008/2022, carte des marchés, prévision.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="tealine"></div>
+
+<header class="hero">
+  <div class="wrap">
+    <h1>Prix des céréales &amp; inflation au Sénégal</h1>
+    <p class="sub">Projet <b>Data Analytics</b> sur <b>données 100 % réelles</b> :
+       prix de marché du <b>Programme Alimentaire Mondial (WFP)</b> et macro de la
+       <b>Banque mondiale</b> — 64 marchés, 14 régions, 2007–2026.</p>
+    <div class="badges">
+      <span class="badge">✅ Données réelles</span>
+      <span class="badge">🥗 WFP / HDX</span>
+      <span class="badge">🌍 Banque mondiale (API)</span>
+      <span class="badge">🗺️ 64 marchés géolocalisés</span>
+      <span class="badge">🔮 Forecasting</span>
+    </div>
+    <div class="cta">
+      <a class="btn primary" id="repoBtn" href="#" target="_blank">⭐ Code sur GitHub</a>
+      <a class="btn ghost" href="#dashboard">Voir les analyses ↓</a>
+    </div>
+  </div>
+</header>
+
+<section id="kpi">
+  <div class="wrap">
+    <h2>Résultats clés (réels)</h2>
+    <p class="lead">Calculés sur les relevés de prix réels 2007–2026.</p>
+    <div class="kpis" id="kpiGrid"></div>
+    <div class="note">
+      <b>Sources réelles &amp; transparence.</b> Prix : <b>WFP – Food Prices for
+      Senegal</b> (relevés <i>actual</i>, détail, FCFA/kg) via HDX. Macro :
+      <b>API Banque mondiale</b>. Tout est téléchargé automatiquement par
+      <code>scripts/download_data.py</code>. Le panier-indice (base 100 = 2015)
+      est une construction méthodologique documentée.
+    </div>
+  </div>
+</section>
+
+<section id="dashboard" style="background:#eef3f9">
+  <div class="wrap">
+    <h2>Tableau de bord interactif</h2>
+    <p class="lead">Graphiques alimentés par les données réelles du projet.</p>
+
+    <div class="card">
+      <h3>Prix de détail des céréales (FCFA/kg)</h3>
+      <p class="cap">Riz importé, mil, maïs local — chocs visibles en 2008 et 2022.</p>
+      <canvas id="chartPrices" height="120"></canvas>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h3>Inflation alimentaire vs officielle</h3>
+        <p class="cap">WFP (céréales) vs Banque mondiale — corrélation 0,91.</p>
+        <canvas id="chartInfl" height="220"></canvas>
+      </div>
+      <div class="card">
+        <h3>Hausse cumulée par denrée (2007→2026)</h3>
+        <p class="cap">%.</p>
+        <canvas id="chartHausse" height="220"></canvas>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Prévision du prix du riz importé (12 mois)</h3>
+      <p class="cap">Historique + prévision (meilleur modèle sélectionné par RMSE).</p>
+      <canvas id="chartForecast" height="110"></canvas>
+    </div>
+  </div>
+</section>
+
+<section id="carte">
+  <div class="wrap">
+    <h2>Analyse régionale — 64 marchés réels</h2>
+    <p class="lead">Indice du panier céréalier par région + localisation GPS des marchés WFP.</p>
+    <figure style="margin:0;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden">
+      <img src="assets/07_carte_marches.png" alt="Carte des marchés" style="width:100%;display:block">
+    </figure>
+  </div>
+</section>
+
+<section id="galerie" style="background:#eef3f9">
+  <div class="wrap">
+    <h2>Visualisations clés</h2>
+    <div class="gallery">
+      <figure><img src="assets/02_indice_panier.png" alt=""><figcaption>Indice du panier céréalier & inflation alimentaire</figcaption></figure>
+      <figure><img src="assets/06_saisonnalite.png" alt=""><figcaption>Saisonnalité des céréales locales (soudure)</figcaption></figure>
+      <figure><img src="assets/05_heatmap_riz_region.png" alt=""><figcaption>Prix du riz importé par région et année</figcaption></figure>
+      <figure><img src="assets/08_macro_contexte.png" alt=""><figcaption>Prix vs production alimentaire (Banque mondiale)</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Projet portfolio Data Analyst / BI · Données réelles
+       <a href="https://data.humdata.org/dataset/wfp-food-prices-for-senegal" target="_blank">WFP</a>
+       &amp; <a href="https://data.worldbank.org/country/senegal" target="_blank">Banque mondiale</a>.</p>
+    <p><a id="repoFoot" href="#" target="_blank">Voir le code source sur GitHub →</a></p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="data.js"></script>
+<script>
+const D = window.PROJECT_DATA, K = D.kpi;
+const NAVY="#1F4E79", RED="#C0392B", GREEN="#27AE60", ORANGE="#E67E22";
+const REPO = "https://github.com/kheuch1492/senegal-food-prices";
+document.getElementById("repoBtn").href = REPO;
+document.getElementById("repoFoot").href = REPO;
+
+const kpis = [
+  {v:"0,91", l:"Corrélation inflation WFP ↔ officielle", c:"green"},
+  {v:"+"+K.crise2008+"%", l:"Crise alimentaire 2008 (céréales)", c:"red"},
+  {v:"+"+K.top_val+"%", l:"Denrée n°1 : "+K.top_produit, c:""},
+  {v:K.indice_now, l:"Indice panier 2026 (base 100=2015)", c:""},
+  {v:K.marches, l:"Marchés réels géolocalisés", c:""},
+  {v:K.mape+"%", l:"MAPE du meilleur modèle ("+K.best_model+")", c:"green"},
+];
+document.getElementById("kpiGrid").innerHTML = kpis.map(k=>
+  `<div class="kpi"><div class="v ${k.c}">${k.v}</div><div class="l">${k.l}</div></div>`).join("");
+
+const base = {responsive:true, interaction:{mode:"index",intersect:false},
+  plugins:{legend:{labels:{boxWidth:14}}}, scales:{x:{ticks:{maxTicksLimit:12}}}};
+
+new Chart(document.getElementById("chartPrices"), {type:"line",
+  data:{labels:D.labels, datasets:[
+    {label:"Riz importé", data:D.riz, borderColor:NAVY, pointRadius:0, borderWidth:2, tension:.2, spanGaps:true},
+    {label:"Mil", data:D.mil, borderColor:GREEN, pointRadius:0, borderWidth:1.6, tension:.2, spanGaps:true},
+    {label:"Maïs local", data:D.mais, borderColor:ORANGE, pointRadius:0, borderWidth:1.6, tension:.2, spanGaps:true},
+  ]}, options:{...base, scales:{...base.scales, y:{title:{display:true,text:"FCFA/kg"}}}}});
+
+new Chart(document.getElementById("chartInfl"), {type:"line",
+  data:{labels:D.comp_years, datasets:[
+    {label:"Alimentaire (WFP)", data:D.comp_wfp, borderColor:GREEN, backgroundColor:GREEN, tension:.2},
+    {label:"Officielle (BM)", data:D.comp_off, borderColor:NAVY, backgroundColor:NAVY, tension:.2},
+  ]}, options:{...base, scales:{...base.scales, y:{title:{display:true,text:"%"}}}}});
+
+new Chart(document.getElementById("chartHausse"), {type:"bar",
+  data:{labels:D.hausse_labels, datasets:[{data:D.hausse_values, backgroundColor:RED}]},
+  options:{...base, indexAxis:"y", plugins:{legend:{display:false}}}});
+
+const pad = D.forecast_labels.map(()=>null);
+new Chart(document.getElementById("chartForecast"), {type:"line",
+  data:{labels:D.labels.concat(D.forecast_labels), datasets:[
+    {label:"Historique", data:D.riz.concat(pad), borderColor:NAVY, pointRadius:0, borderWidth:2, tension:.2, spanGaps:true},
+    {label:"Prévision", data:D.riz.map(()=>null).concat(D.forecast), borderColor:RED, borderDash:[6,4], pointRadius:0, borderWidth:2},
+  ]}, options:{...base, scales:{...base.scales, y:{title:{display:true,text:"FCFA/kg"}}}}});
+</script>
+</body>
+</html>
