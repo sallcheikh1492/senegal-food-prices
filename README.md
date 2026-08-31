@@ -12,9 +12,9 @@
 ![SQL](https://img.shields.io/badge/SQL-PostgreSQL-336791)
 ![Forecast](https://img.shields.io/badge/Forecast-SARIMA%20%7C%20Régression-blueviolet)
 
-### 🌍 [**Voir le site web du projet (démo en ligne)**](https://kheuch1492.github.io/senegal-food-prices/)
+### 🌍 [**Voir le site web du projet (démo en ligne)**](https://sallcheikh1492.github.io/senegal-food-prices/)
 
-[![Aperçu du site](docs/assets/site_hero.png)](https://kheuch1492.github.io/senegal-food-prices/)
+[![Aperçu du site](docs/assets/site_hero.png)](https://sallcheikh1492.github.io/senegal-food-prices/)
 
 > *Tableau de bord interactif (graphiques alimentés par les données réelles) :*
 
